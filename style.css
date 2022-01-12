@@ -1,9 +1,8 @@
-#canvas
-{
-    background-color:#30c0df;
-    border: 2px solid black;
+#canvas {
+    background-color:#95D4DB;
+    border: 10px solid #FEFDDE;
+    border-radius: 20px;
     display: block;
-    margin: auto;
-    padding: auto;
-    
+    margin: 0px auto;
+    padding: 0;
 }
