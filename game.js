@@ -1,6 +1,7 @@
 const RAD = Math.PI/180;
 const scrn = document.getElementById('canvas');
 resizeCanvas(); 
+scrn.height = 420;
 const sctx = scrn.getContext("2d");
 scrn.tabIndex = 1;
 scrn.addEventListener("click",()=>{
@@ -15,7 +16,7 @@ scrn.addEventListener("click",()=>{
         case state.gameOver :
             state.curr = state.getReady;
             bird.speed = 0;
-            bird.y = 400;
+            bird.y = scrn.height / 2.3;
             pipe.pipes=[];
             UI.score.curr = 0;
             SFX.played=false;
@@ -32,12 +33,6 @@ scrn.addEventListener("click",()=>{
         scrn.width = 800;
     } else {
         scrn.width = window.innerWidth - 50;
-    }
-
-    if (window.innerHeight > 550) {
-        scrn.height = 500;
-    } else {
-        scrn.height = window.innerHeight - 50;
     }
  }
 
@@ -67,7 +62,7 @@ scrn.addEventListener("click",()=>{
 
 
  let frames = 0;
- let dx = 2;
+ let dx = 3;
  const state = {
      curr : 0,
      getReady : 0,
@@ -86,15 +81,16 @@ scrn.addEventListener("click",()=>{
  const gnd = {
     sprite : new Image(),
      x : 0,
-     y :0,
+     y : 0,
      draw : function() {
         this.y = parseFloat(scrn.height-this.sprite.height);
         sctx.drawImage(this.sprite,this.x,this.y);
      },
      update : function() {
         if(state.curr != state.Play) return;
-        this.x -= dx;
-        this.x = this.x % (this.sprite.width/2);    
+        //commented out ground updating/moving
+        //this.x -= dx;
+        //this.x = this.x % (this.sprite.width/2);    
     }
  };
  const bg = {
@@ -109,7 +105,7 @@ scrn.addEventListener("click",()=>{
  const pipe = {
      top : {sprite : new Image()},
      bot : {sprite : new Image()},
-     gap:85,
+     gap: 180, // gap between top and bottom pipes
      moved: true,
      pipes : [],
      draw : function(){
@@ -168,7 +164,7 @@ scrn.addEventListener("click",()=>{
         switch (state.curr) {
             case state.getReady :
                 this.rotatation = 0;
-                this.y +=(frames%10==0) ? Math.sin(frames*RAD) :0;
+                this.y +=(frames%10==0) ? Math.sin(frames*RAD) : 0;
                 this.frame += (frames%10==0) ? 1 : 0;
                 break;
             case state.Play :
@@ -211,13 +207,12 @@ scrn.addEventListener("click",()=>{
         }
     },
     setRotation : function(){
-        if(this.speed <= 0)
-        {
-            
+        if(this.speed <= 0) {
             this.rotatation = Math.max(-25, -25 * this.speed/(-1*this.thrust));
         }
-        else if(this.speed > 0 ) {
-            this.rotatation = Math.min(90, 90 * this.speed/(this.thrust*2));
+        else if(this.speed > 0 )
+        {
+            this.rotatation = Math.min(90, 90 * this.speed/(this.thrust*9));
         }
     },
     collisioned : function(){
@@ -229,11 +224,11 @@ scrn.addEventListener("click",()=>{
         let roof = y + parseFloat(pipe.top.sprite.height);
         let floor = roof + pipe.gap;
         let w = parseFloat(pipe.top.sprite.width);
-        if(this.x + r>= x)
+        if(this.x + r>= x + 15) // 15 px leeway on left of pipe
         {
-            if(this.x + r < x + w)
+            if(this.x + r < x + w - 15) // 15 px leeway on right of pipe
             {
-                if(this.y - r <= roof || this.y + r>= floor)
+                if(this.y - r <= roof - 10 || this.y + r>= floor + 10) // 10 px leeway on top/bottom of pipe
                 {
                     SFX.hit.play();
                     return true;
@@ -289,17 +284,17 @@ scrn.addEventListener("click",()=>{
     },
     drawScore : function() {
             sctx.fillStyle = "#FFFFFF";
-            sctx.strokeStyle = "#000000";
+            sctx.strokeStyle = "#FFFFFF";
         switch (state.curr) {
             case state.Play :
-                sctx.lineWidth = "2";
-                sctx.font = "35px Squada One";
+                sctx.lineWidth = "0.1";
+                sctx.font = "26px Comic Sans MS";
                 sctx.fillText(this.score.curr,scrn.width/2-5,50);
                 sctx.strokeText(this.score.curr,scrn.width/2-5,50);
                 break;
             case state.gameOver :
-                    sctx.lineWidth = "2";
-                    sctx.font = "40px Squada One";
+                    sctx.lineWidth = "0.1";
+                    sctx.font = "20px Comic Sans MS";
                     let sc = `SCORE :     ${this.score.curr}`;
                     try {
                         this.score.best = Math.max(this.score.curr,localStorage.getItem("best"));
@@ -363,7 +358,7 @@ gameLoop();
  }
  function draw()
  {
-    sctx.fillStyle = "#30c0df";
+    sctx.fillStyle = "#95D4DB";
     sctx.fillRect(0,0,scrn.width,scrn.height)
     bg.draw();
     pipe.draw();
