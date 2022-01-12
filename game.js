@@ -1,5 +1,7 @@
  const RAD = Math.PI/180;
  const scrn = document.getElementById('canvas');
+ scrn.width=window.innerWidth;
+ scrn.height=window.innerHeight;
  const sctx = scrn.getContext("2d");
  scrn.tabIndex = 1;
  scrn.addEventListener("click",()=>{
@@ -20,6 +22,11 @@
             SFX.played=false;
             break;
     }
+ })
+
+ window.addEventListener("resize",()=>{
+    scrn.width=window.innerWidth;
+    scrn.height=window.innerHeight;
  })
 
  scrn.onkeydown = function keyDown(e) {
