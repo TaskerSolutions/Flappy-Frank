@@ -16,7 +16,7 @@
         case state.gameOver :
             state.curr = state.getReady;
             bird.speed = 0;
-            bird.y = 100;
+            bird.y = 400;
             pipe.pipes=[];
             UI.score.curr = 0;
             SFX.played=false;
@@ -43,7 +43,7 @@
 	        case state.gameOver :
 	            state.curr = state.getReady;
 	            bird.speed = 0;
-	            bird.y = 100;
+	            bird.y = window.innerHeight / 2.3;
 	            pipe.pipes=[];
 	            UI.score.curr = 0;
 	            SFX.played=false;
@@ -137,7 +137,7 @@
         ],
     rotatation : 0,
     x : 50,
-    y :100,
+    y : window.innerHeight / 2.3,
     speed : 0,
     gravity : .125,
     thrust : 3.6,
