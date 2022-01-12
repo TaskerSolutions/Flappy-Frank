@@ -1,10 +1,9 @@
- const RAD = Math.PI/180;
- const scrn = document.getElementById('canvas');
- scrn.width=window.innerWidth - 50;
- scrn.height=window.innerHeight - 50;
- const sctx = scrn.getContext("2d");
- scrn.tabIndex = 1;
- scrn.addEventListener("click",()=>{
+const RAD = Math.PI/180;
+const scrn = document.getElementById('canvas');
+resizeCanvas(); 
+const sctx = scrn.getContext("2d");
+scrn.tabIndex = 1;
+scrn.addEventListener("click",()=>{
     switch (state.curr) {
         case state.getReady :
             state.curr = state.Play;
@@ -25,9 +24,22 @@
  })
 
  window.addEventListener("resize",()=>{
-    scrn.width=window.innerWidth - 50;
-    scrn.height=window.innerHeight - 50;
+    resizeCanvas();
  })
+
+ function resizeCanvas() {
+    if (window.innerWidth > 850) {
+        scrn.width = 800;
+    } else {
+        scrn.width = window.innerWidth - 50;
+    }
+
+    if (window.innerHeight > 550) {
+        scrn.height = 500;
+    } else {
+        scrn.height = window.innerHeight - 50;
+    }
+ }
 
  scrn.onkeydown = function keyDown(e) {
  	if (e.keyCode == 32 || e.keyCode == 87 || e.keyCode == 38)   // Space Key or W key or arrow up
@@ -43,7 +55,7 @@
 	        case state.gameOver :
 	            state.curr = state.getReady;
 	            bird.speed = 0;
-	            bird.y = window.innerHeight / 2.3;
+	            bird.y = scrn.height / 2.3;
 	            pipe.pipes=[];
 	            UI.score.curr = 0;
 	            SFX.played=false;
@@ -136,8 +148,8 @@
             {sprite : new Image()},
         ],
     rotatation : 0,
-    x : 50,
-    y : window.innerHeight / 2.3,
+    x : 150,
+    y : scrn.height / 2.3,
     speed : 0,
     gravity : .125,
     thrust : 3.6,
