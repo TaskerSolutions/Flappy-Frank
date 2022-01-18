@@ -96,16 +96,16 @@ scrn.addEventListener("click",()=>{
  const bg = {
     sprite : new Image(),
     x : 0,
-    y :0,
+    y : 0,
     draw : function() {
-        y = parseFloat(scrn.height-this.sprite.height);
+        y = parseFloat(scrn.height-scrn.height); //this.sprite.height);
         sctx.drawImage(this.sprite,this.x,y);
     }
  };
  const pipe = {
      top : {sprite : new Image()},
      bot : {sprite : new Image()},
-     gap: 180, // gap between top and bottom pipes
+     gap: 220, // gap between top and bottom obstacles
      moved: true,
      pipes : [],
      draw : function(){
@@ -224,9 +224,9 @@ scrn.addEventListener("click",()=>{
         let roof = y + parseFloat(pipe.top.sprite.height);
         let floor = roof + pipe.gap;
         let w = parseFloat(pipe.top.sprite.width);
-        if(this.x + r>= x + 15) // 15 px leeway on left of pipe
+        if(this.x + r>= x + 20) // 20 px leeway on left of pipe
         {
-            if(this.x + r < x + w - 15) // 15 px leeway on right of pipe
+            if(this.x + r < x + w - 12) // 20 px leeway on right of pipe
             {
                 if(this.y - r <= roof - 10 || this.y + r>= floor + 10) // 10 px leeway on top/bottom of pipe
                 {
@@ -288,13 +288,13 @@ scrn.addEventListener("click",()=>{
         switch (state.curr) {
             case state.Play :
                 sctx.lineWidth = "0.1";
-                sctx.font = "26px Comic Sans MS";
+                sctx.font = "26px Trebuchet MS";
                 sctx.fillText(this.score.curr,scrn.width/2-5,50);
                 sctx.strokeText(this.score.curr,scrn.width/2-5,50);
                 break;
             case state.gameOver :
                     sctx.lineWidth = "0.1";
-                    sctx.font = "20px Comic Sans MS";
+                    sctx.font = "20px Trebuchet MS";
                     let sc = `SCORE :     ${this.score.curr}`;
                     try {
                         this.score.best = Math.max(this.score.curr,localStorage.getItem("best"));
@@ -321,18 +321,18 @@ scrn.addEventListener("click",()=>{
 
  };
 
-gnd.sprite.src="img/ground.png";
-bg.sprite.src="img/BG.png";
-pipe.top.sprite.src="img/toppipe.png";
-pipe.bot.sprite.src="img/botpipe.png";
-UI.gameOver.sprite.src="img/go.png";
-UI.getReady.sprite.src="img/getready.png";
-UI.tap[0].sprite.src="img/tap/t0.png";
-UI.tap[1].sprite.src="img/tap/t1.png";
-bird.animations[0].sprite.src="img/bird/b0.png";
-bird.animations[1].sprite.src="img/bird/b1.png";
-bird.animations[2].sprite.src="img/bird/b2.png";
-bird.animations[3].sprite.src="img/bird/b0.png";
+gnd.sprite.src="img/cave_ground.png";
+bg.sprite.src="img/cave_background.png";
+pipe.top.sprite.src="img/cave_top_obstacle.png";
+pipe.bot.sprite.src="img/cave_bottom_obstacle.png";
+UI.gameOver.sprite.src="img/well_done.png";
+UI.getReady.sprite.src="img/tap_to_start.png";
+UI.tap[0].sprite.src="img/tap0.png";
+UI.tap[1].sprite.src="img/tap1.png";
+bird.animations[0].sprite.src="img/frank_wings_middle.png";
+bird.animations[1].sprite.src="img/frank_wings_down.png";
+bird.animations[2].sprite.src="img/frank_wings_up.png";
+bird.animations[3].sprite.src="img/frank_wings_middle.png";
 SFX.start.src = "sfx/start.wav"
 SFX.flap.src = "sfx/flap.wav"
 SFX.score.src = "sfx/score.wav"
@@ -341,30 +341,27 @@ SFX.die.src = "sfx/die.wav"
 
 gameLoop();
 
- function gameLoop()
- { 
-     update();
-     draw();
-     frames++;
-     requestAnimationFrame(gameLoop);
- }
+function gameLoop() { 
+    update();
+    draw();
+    frames++;
+    requestAnimationFrame(gameLoop);
+}
 
- function update()
- {
-  bird.update();  
-  gnd.update();
-  pipe.update();
-  UI.update();
- }
- function draw()
- {
+function update() {
+    bird.update();  
+    gnd.update();
+    pipe.update();
+    UI.update();
+}
+
+function draw() {
     sctx.fillStyle = "#95D4DB";
     sctx.fillRect(0,0,scrn.width,scrn.height)
     bg.draw();
     pipe.draw();
-    
+
     bird.draw();
     gnd.draw();
     UI.draw();
- }
-
+}
