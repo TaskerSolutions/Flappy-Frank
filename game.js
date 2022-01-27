@@ -90,18 +90,27 @@ scrn.addEventListener("click",()=>{
      },
      update : function() {
         if(state.curr != state.Play) return;
-        //commented out ground updating/moving
-        //this.x -= dx;
-        //this.x = this.x % (this.sprite.width/2);    
+        // ground moving
+        this.x -= dx;
+        this.x = this.x % (this.sprite.width/2);    
     }
  };
  const bg = {
     sprite : new Image(),
     x : 0,
     y : 0,
-    draw : function() {
+     draw : function() {
         y = parseFloat(scrn.height-scrn.height); //this.sprite.height);
         sctx.drawImage(this.sprite,this.x,y);
+    },
+     update : function() {
+        if(state.curr != state.Play) return;
+        // bg moving
+        this.x -= dx / 3; //speed
+        //this.x = this.x % (this.sprite.width/1.3);
+        if (this.x + this.sprite.width < 0) {
+            this.x = scrn.width;
+        }
     }
  };
  const pipe = {
@@ -330,8 +339,8 @@ scrn.addEventListener("click",()=>{
 
  };
 
-gnd.sprite.src="img/cave_ground.png";
-bg.sprite.src="img/cave_background.png";
+gnd.sprite.src="img/cave_ground_long.png";
+bg.sprite.src="img/cave_background_new.png";
 pipe.top.sprite.src="img/cave_top_obstacle.png";
 pipe.bot.sprite.src="img/cave_bottom_obstacle.png";
 UI.gameOver.sprite.src="img/well_done.png";
@@ -361,12 +370,13 @@ function gameLoop() {
 function update() {
     bird.update();  
     gnd.update();
+    bg.update();
     pipe.update();
     UI.update();
 }
 
 function draw() {
-    sctx.fillStyle = "#95D4DB";
+    sctx.fillStyle = "#564d48"; //bg color
     sctx.fillRect(0,0,scrn.width,scrn.height)
     bg.draw();
     pipe.draw();
