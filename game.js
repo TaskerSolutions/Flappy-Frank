@@ -347,7 +347,7 @@ SFX.flap.src = "sfx/flap.wav"
 SFX.score1.src = "sfx/score1.mp3"
 SFX.score2.src = "sfx/score2.mp3"
 SFX.hit.src = "sfx/hit.wav"
-SFX.die.src = "sfx/Frank_Down_I_Go.wav"
+SFX.die.src = "sfx/die.wav"
 
 gameLoop();
 
