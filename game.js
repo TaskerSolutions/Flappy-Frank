@@ -1,6 +1,7 @@
 const RAD = Math.PI/180;
 const scrn = document.getElementById('canvas');
 resizeCanvas(); 
+let scoreCounter = 0;
 scrn.height = 420;
 const sctx = scrn.getContext("2d");
 scrn.tabIndex = 1;
@@ -73,7 +74,8 @@ scrn.addEventListener("click",()=>{
  const SFX = {
      start : new Audio(),
      flap : new Audio(),
-     score : new Audio(),
+     score1 : new Audio(),
+     score2 : new Audio(),
      hit : new Audio(),
      die : new Audio(),
      played : false
@@ -238,7 +240,14 @@ scrn.addEventListener("click",()=>{
             else if(pipe.moved)
             {
                 UI.score.curr++;
-                SFX.score.play();
+                if (scoreCounter == 1) {
+                    SFX.score1.play();
+                    scoreCounter = 0;
+                } else {
+                    SFX.score2.play();
+                    scoreCounter = 1;
+                }
+                
                 pipe.moved = false;
             }
 
@@ -288,13 +297,13 @@ scrn.addEventListener("click",()=>{
         switch (state.curr) {
             case state.Play :
                 sctx.lineWidth = "0.1";
-                sctx.font = "26px Trebuchet MS";
+                sctx.font = "26px balsamiq sans";
                 sctx.fillText(this.score.curr,scrn.width/2-5,50);
                 sctx.strokeText(this.score.curr,scrn.width/2-5,50);
                 break;
             case state.gameOver :
                     sctx.lineWidth = "0.1";
-                    sctx.font = "20px Trebuchet MS";
+                    sctx.font = "20px Balsamiq sans";
                     let sc = `SCORE :     ${this.score.curr}`;
                     try {
                         this.score.best = Math.max(this.score.curr,localStorage.getItem("best"));
@@ -335,9 +344,10 @@ bird.animations[2].sprite.src="img/frank_wings_up.png";
 bird.animations[3].sprite.src="img/frank_wings_middle.png";
 SFX.start.src = "sfx/start.wav"
 SFX.flap.src = "sfx/flap.wav"
-SFX.score.src = "sfx/score.wav"
+SFX.score1.src = "sfx/score1.mp3"
+SFX.score2.src = "sfx/score2.mp3"
 SFX.hit.src = "sfx/hit.wav"
-SFX.die.src = "sfx/die.wav"
+SFX.die.src = "sfx/Frank_Down_I_Go.wav"
 
 gameLoop();
 
