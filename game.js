@@ -21,6 +21,7 @@ scrn.addEventListener("click",()=>{
             pipe.pipes=[];
             UI.score.curr = 0;
             SFX.played=false;
+            bird.isDead = false;
             break;
     }
  })
@@ -63,7 +64,7 @@ scrn.addEventListener("click",()=>{
 
 
  let frames = 0;
- let dx = 3;
+ let dx = 3; // speed
  const state = {
      curr : 0,
      getReady : 0,
@@ -154,22 +155,30 @@ scrn.addEventListener("click",()=>{
             {sprite : new Image()},
             {sprite : new Image()},
         ],
+    dead : {sprite : new Image()},
     rotatation : 0,
     x : 150,
     y : scrn.height / 2.3,
     speed : 0,
     gravity : .125,
     thrust : 3.6,
-    frame:0,
+    frame: 0,
+    isDead : false,
+
     draw : function() {
         let h = this.animations[this.frame].sprite.height;
         let w = this.animations[this.frame].sprite.width;
         sctx.save();
         sctx.translate(this.x,this.y);
         sctx.rotate(this.rotatation*RAD);
-        sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2);
+        if (!this.isDead) {  // draw bird
+            sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2);
+        } else {
+            sctx.drawImage(this.dead.sprite,-w/2,-h/2);
+        }
         sctx.restore();
     },
+
     update : function() {
         let r = parseFloat( this.animations[0].sprite.width)/2;
         switch (state.curr) {
@@ -179,7 +188,7 @@ scrn.addEventListener("click",()=>{
                 this.frame += (frames%10==0) ? 1 : 0;
                 break;
             case state.Play :
-                this.frame += (frames%5==0) ? 1 : 0;
+                this.frame += (frames%5==0) ? 1 : 0; // animate bird ?
                 this.y += this.speed;
                 this.setRotation()
                 this.speed += this.gravity;
@@ -196,10 +205,11 @@ scrn.addEventListener("click",()=>{
                     this.setRotation()
                     this.speed += this.gravity*2;
                 }
-                else {
+                else { // frank on ground, dead
+                this.isDead = true;
                 this.speed = 0;
                 this.y=gnd.y-r;
-                this.rotatation=90;
+                this.rotatation=0;
                 if(!SFX.played) {
                     SFX.die.play();
                     SFX.played = true;
@@ -241,6 +251,7 @@ scrn.addEventListener("click",()=>{
             {
                 if(this.y - r <= roof - 10 || this.y + r>= floor + 10) // 10 px leeway on top/bottom of pipe
                 {
+                    // collision
                     SFX.hit.play();
                     return true;
                 }
@@ -317,7 +328,7 @@ scrn.addEventListener("click",()=>{
                     try {
                         this.score.best = Math.max(this.score.curr,localStorage.getItem("best"));
                         localStorage.setItem("best",this.score.best);
-                        let bs = `BEST  :     ${this.score.best}`;
+                        let bs = `BEST :        ${this.score.best}`;
                         sctx.fillText(sc,scrn.width/2-80,scrn.height/2+0);
                         sctx.strokeText(sc,scrn.width/2-80,scrn.height/2+0);
                         sctx.fillText(bs,scrn.width/2-80,scrn.height/2+30);
@@ -351,10 +362,11 @@ bird.animations[0].sprite.src="img/frank_wings_middle.png";
 bird.animations[1].sprite.src="img/frank_wings_down.png";
 bird.animations[2].sprite.src="img/frank_wings_up.png";
 bird.animations[3].sprite.src="img/frank_wings_middle.png";
+bird.dead.sprite.src="img/frank_laugh.png";
 SFX.start.src = "sfx/start.wav"
 SFX.flap.src = "sfx/flap.wav"
-SFX.score1.src = "sfx/score1.mp3"
-SFX.score2.src = "sfx/score2.mp3"
+SFX.score1.src = "sfx/bloop.wav"
+SFX.score2.src = "sfx/bloop.wav"
 SFX.hit.src = "sfx/hit.wav"
 SFX.die.src = "sfx/die.wav"
 
