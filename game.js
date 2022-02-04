@@ -64,6 +64,8 @@ scrn.addEventListener("click",()=>{
 
 
  let frames = 0;
+ let counter = 1; // for increasing speed over time
+ let pipeSpawnSpeed = 100; // smaller is faster
  let dx = 3; // speed
  const state = {
      curr : 0,
@@ -114,6 +116,7 @@ scrn.addEventListener("click",()=>{
         }
     }
  };
+
  const pipe = {
      top : {sprite : new Image()},
      bot : {sprite : new Image()},
@@ -130,15 +133,15 @@ scrn.addEventListener("click",()=>{
      },
      update : function(){
          if(state.curr!=state.Play) return;
-         if(frames%100==0)
+         if(frames % pipeSpawnSpeed == 0)
          {
-             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8)});
+             this.pipes.push({x:parseFloat(scrn.width), y:-210*Math.min(Math.random()+1, 1.8)});
          }
          this.pipes.forEach(pipe=>{
              pipe.x -= dx;
          })
 
-         if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width)
+         if(this.pipes.length && this.pipes[0].x < -this.top.sprite.width)
          {
             this.pipes.shift();
             this.moved = true;
@@ -192,9 +195,11 @@ scrn.addEventListener("click",()=>{
                 this.y += this.speed;
                 this.setRotation()
                 this.speed += this.gravity;
-                if(this.y + r  >= gnd.y||this.collisioned())
+                setCounter();
+                if(this.y + r  >= gnd.y || this.collisioned())
                 {
                     state.curr = state.gameOver;
+                    dx = 3;
                 }
                 
                 break;
@@ -350,6 +355,22 @@ scrn.addEventListener("click",()=>{
 
  };
 
+ function setCounter() {
+    counter ++;
+    if (counter % 100 == 0) {
+        dx += 0.1;
+        console.log("speed = " + dx)
+
+        if (pipe.gap > 140) {
+            pipe.gap -= 2;
+        }
+        console.log("pipe gap = " + pipe.gap)
+
+        pipeSpawnSpeed = Math.round(100 - dx * 1.5);
+        console.log("pipe spawn rate = 1/" + pipeSpawnSpeed)
+    }
+ }
+
 gnd.sprite.src="img/cave_ground_long.png";
 bg.sprite.src="img/cave_background_new.png";
 pipe.top.sprite.src="img/cave_top_obstacle.png";
@@ -379,7 +400,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-function update() {
+function update() {    
     bird.update();  
     gnd.update();
     bg.update();
