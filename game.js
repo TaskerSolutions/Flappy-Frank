@@ -199,7 +199,10 @@ scrn.addEventListener("click",()=>{
                 if(this.y + r  >= gnd.y || this.collisioned())
                 {
                     state.curr = state.gameOver;
+                    // reset speed, pipe gap & pipe spawn speed
                     dx = 3;
+                    pipe.gap = 220;
+                    pipeSpawnSpeed = 100;
                 }
                 
                 break;
