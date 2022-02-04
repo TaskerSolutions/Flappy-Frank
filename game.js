@@ -1,6 +1,5 @@
 const RAD = Math.PI/180;
 const scrn = document.getElementById('canvas');
-resizeCanvas(); 
 let scoreCounter = 0;
 scrn.height = 420;
 const sctx = scrn.getContext("2d");
@@ -35,6 +34,13 @@ scrn.addEventListener("click",()=>{
         scrn.width = 800;
     } else {
         scrn.width = window.innerWidth - 50;
+    }
+    if (window.innerWidth > 600) {
+        bird.x = 150;
+    } else if (window.innerWidth <= 600 && window.innerWidth > 400) {
+        bird.x = 100;
+    } else if (window.innerWidth <= 400) {
+        bird.x = 50;
     }
  }
 
@@ -421,6 +427,7 @@ SFX.score2.src = "sfx/bloop.wav"
 SFX.hit.src = "sfx/hit.wav"
 SFX.die.src = "sfx/die.wav"
 
+resizeCanvas(); 
 gameLoop();
 
 function gameLoop() { 
