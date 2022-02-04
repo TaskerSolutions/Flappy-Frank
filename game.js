@@ -94,7 +94,7 @@ scrn.addEventListener("click",()=>{
      update : function() {
         if(state.curr != state.Play) return;
         // ground moving
-        this.x -= dx * 3;
+        this.x -= dx;
         if (this.x + this.sprite.width < scrn.width) {
             console.log("gnd2.x = gnd.width")
             gnd2.x = this.x + this.sprite.width;
@@ -113,7 +113,7 @@ scrn.addEventListener("click",()=>{
      update : function() {
         if(state.curr != state.Play) return;
         // ground moving
-        this.x -= dx * 3;
+        this.x -= dx;
         if (this.x + this.sprite.width < scrn.width) {
             gnd.x = this.x + this.sprite.width;
         }
