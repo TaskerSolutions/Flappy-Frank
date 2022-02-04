@@ -94,8 +94,30 @@ scrn.addEventListener("click",()=>{
      update : function() {
         if(state.curr != state.Play) return;
         // ground moving
-        this.x -= dx;
-        this.x = this.x % (this.sprite.width/2);    
+        this.x -= dx * 3;
+        if (this.x + this.sprite.width < scrn.width) {
+            console.log("gnd2.x = gnd.width")
+            gnd2.x = this.x + this.sprite.width;
+        }
+        //this.x = this.x % (this.sprite.width/2);    
+    }
+ };
+ const gnd2 = {
+    sprite : new Image(),
+     x : 0,
+     y : 0,
+     draw : function() {
+        this.y = parseFloat(scrn.height-this.sprite.height);
+        sctx.drawImage(this.sprite,this.x,this.y);
+     },
+     update : function() {
+        if(state.curr != state.Play) return;
+        // ground moving
+        this.x -= dx * 3;
+        if (this.x + this.sprite.width < scrn.width) {
+            gnd.x = this.x + this.sprite.width;
+        }
+        //this.x = this.x % (this.sprite.width/2);    
     }
  };
  const bg = {
@@ -374,7 +396,8 @@ scrn.addEventListener("click",()=>{
     }
  }
 
-gnd.sprite.src="img/cave_ground_long.png";
+gnd.sprite.src="img/cave_ground.png";
+gnd2.sprite.src="img/cave_ground.png";
 bg.sprite.src="img/cave_background_new.png";
 pipe.top.sprite.src="img/cave_top_obstacle.png";
 pipe.bot.sprite.src="img/cave_bottom_obstacle.png";
@@ -406,6 +429,7 @@ function gameLoop() {
 function update() {    
     bird.update();  
     gnd.update();
+    gnd2.update();
     bg.update();
     pipe.update();
     UI.update();
@@ -419,5 +443,6 @@ function draw() {
 
     bird.draw();
     gnd.draw();
+    gnd2.draw();
     UI.draw();
 }
