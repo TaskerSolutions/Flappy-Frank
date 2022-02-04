@@ -64,7 +64,7 @@ scrn.addEventListener("click",()=>{
 
 
  let frames = 0;
- let counter = 1; // for increasing speed over time
+ let counter = 0; // for increasing speed over time
  let pipeSpawnSpeed = 100; // smaller is faster
  let dx = 3; // speed
  const state = {
@@ -96,7 +96,7 @@ scrn.addEventListener("click",()=>{
         // ground moving
         this.x -= dx;
         if (this.x + this.sprite.width < scrn.width) {
-            console.log("gnd2.x = gnd.width")
+            //console.log("gnd2.x = gnd.width")
             gnd2.x = this.x + this.sprite.width;
         }
         //this.x = this.x % (this.sprite.width/2);    
@@ -225,6 +225,7 @@ scrn.addEventListener("click",()=>{
                     dx = 3;
                     pipe.gap = 220;
                     pipeSpawnSpeed = 100;
+                    counter = 0;
                 }
                 
                 break;
@@ -384,15 +385,18 @@ scrn.addEventListener("click",()=>{
     counter ++;
     if (counter % 100 == 0) {
         dx += 0.1;
-        console.log("speed = " + dx)
+        //console.log("speed = " + dx)
 
         if (pipe.gap > 140) {
             pipe.gap -= 2;
         }
-        console.log("pipe gap = " + pipe.gap)
-
-        pipeSpawnSpeed = Math.round(100 - dx * 1.5);
-        console.log("pipe spawn rate = 1/" + pipeSpawnSpeed)
+        //console.log("pipe gap = " + pipe.gap)
+    }
+    if (counter % 1000 == 0) {
+        if (pipeSpawnSpeed > 50 ) {
+            pipeSpawnSpeed -= 10;
+        }
+        //console.log("pipe spawn rate = 1/" + pipeSpawnSpeed)
     }
  }
 
