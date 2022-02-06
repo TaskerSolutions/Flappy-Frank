@@ -4,6 +4,7 @@ let scoreCounter = 0;
 scrn.height = 420;
 const sctx = scrn.getContext("2d");
 scrn.tabIndex = 1;
+
 scrn.addEventListener("click",()=>{
     switch (state.curr) {
         case state.getReady :
@@ -51,6 +52,11 @@ scrn.addEventListener("click",()=>{
 	        case state.getReady :
 	            state.curr = state.Play;
 	            SFX.start.play();
+                // reset speed, pipe gap & pipe spawn speed
+                dx = 3;
+                pipe.gap = 220;
+                pipeSpawnSpeed = 100;
+                counter = 0;
 	            break;
 	        case state.Play :
 	            bird.flap();
@@ -62,6 +68,11 @@ scrn.addEventListener("click",()=>{
 	            pipe.pipes=[];
 	            UI.score.curr = 0;
 	            SFX.played=false;
+                // duplicate reset as a failsafe
+                dx = 3;
+                pipe.gap = 220;
+                pipeSpawnSpeed = 100;
+                counter = 0;
 	            break;
    		}
  	}
@@ -227,11 +238,6 @@ scrn.addEventListener("click",()=>{
                 if(this.y + r  >= gnd.y || this.collisioned())
                 {
                     state.curr = state.gameOver;
-                    // reset speed, pipe gap & pipe spawn speed
-                    dx = 3;
-                    pipe.gap = 220;
-                    pipeSpawnSpeed = 100;
-                    counter = 0;
                 }
                 
                 break;
