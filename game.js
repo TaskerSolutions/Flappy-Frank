@@ -5,28 +5,7 @@ scrn.height = 420;
 const sctx = scrn.getContext("2d");
 scrn.tabIndex = 1;
 
-scrn.addEventListener("click",()=>{
-    switch (state.curr) {
-        case state.getReady :
-            state.curr = state.Play;
-            SFX.start.play();
-            break;
-        case state.Play :
-            bird.flap();
-            break;
-        case state.gameOver :
-            state.curr = state.getReady;
-            bird.speed = 0;
-            bird.y = scrn.height / 2.3;
-            pipe.pipes=[];
-            UI.score.curr = 0;
-            SFX.played=false;
-            bird.isDead = false;
-            break;
-    }
- })
-
- window.addEventListener("resize",()=>{
+window.addEventListener("resize",()=>{
     resizeCanvas();
  })
 
@@ -45,6 +24,28 @@ scrn.addEventListener("click",()=>{
     }
  }
 
+scrn.addEventListener("click",()=>{
+    switch (state.curr) {
+        case state.getReady :
+            state.curr = state.Play;
+            SFX.start.play();
+            resetGame(); // reset speed, pipe gap & pipe spawn speed
+            break;
+        case state.Play :
+            bird.flap();
+            break;
+        case state.gameOver :
+            state.curr = state.getReady;
+            bird.speed = 0;
+            bird.y = scrn.height / 2.3;
+            pipe.pipes=[];
+            UI.score.curr = 0;
+            SFX.played=false;
+            bird.isDead = false;
+            break;
+    }
+ });
+
  scrn.onkeydown = function keyDown(e) {
  	if (e.keyCode == 32 || e.keyCode == 87 || e.keyCode == 38)   // Space Key or W key or arrow up
  	{
@@ -52,11 +53,7 @@ scrn.addEventListener("click",()=>{
 	        case state.getReady :
 	            state.curr = state.Play;
 	            SFX.start.play();
-                // reset speed, pipe gap & pipe spawn speed
-                dx = 3;
-                pipe.gap = 220;
-                pipeSpawnSpeed = 100;
-                counter = 0;
+                resetGame(); // reset speed, pipe gap & pipe spawn speed
 	            break;
 	        case state.Play :
 	            bird.flap();
@@ -68,14 +65,17 @@ scrn.addEventListener("click",()=>{
 	            pipe.pipes=[];
 	            UI.score.curr = 0;
 	            SFX.played=false;
-                // duplicate reset as a failsafe
-                dx = 3;
-                pipe.gap = 220;
-                pipeSpawnSpeed = 100;
-                counter = 0;
+                bird.isDead = false;
 	            break;
    		}
  	}
+}
+
+function resetGame() {
+    dx = 3;
+    pipe.gap = 220;
+    pipeSpawnSpeed = 100;
+    counter = 0;
 }
 
 
@@ -88,8 +88,7 @@ scrn.addEventListener("click",()=>{
      curr : 0,
      getReady : 0,
      Play : 1,
-     gameOver : 2,
-
+     gameOver : 2
  }
  const SFX = {
      start : new Audio(),
@@ -313,17 +312,17 @@ scrn.addEventListener("click",()=>{
                 
                 pipe.moved = false;
             }
-
-            
-                
         }
     }
  };
  const UI = {
-    getReady : {sprite : new Image()},
-    gameOver : {sprite : new Image()},
-    tap : [{sprite : new Image()},
-           {sprite : new Image()}],
+        getReady : {sprite : new Image()},
+        gameOver : {sprite : new Image()},
+        tap :
+        [
+            {sprite : new Image()},
+            {sprite : new Image()}
+        ],
     score : {
         curr : 0,
         best : 0,
@@ -341,7 +340,7 @@ scrn.addEventListener("click",()=>{
                 this.tx = parseFloat(scrn.width - this.tap[0].sprite.width)/2;
                 this.ty = this.y + this.getReady.sprite.height- this.tap[0].sprite.height;
                 sctx.drawImage(this.getReady.sprite,this.x,this.y);
-                sctx.drawImage(this.tap[this.frame].sprite,this.tx,this.ty)
+                sctx.drawImage(this.tap[this.frame].sprite,this.tx,this.ty);
                 break;
             case state.gameOver :
                 this.y = parseFloat(scrn.height-this.gameOver.sprite.height)/2;
@@ -349,7 +348,7 @@ scrn.addEventListener("click",()=>{
                 this.tx = parseFloat(scrn.width - this.tap[0].sprite.width)/2;
                 this.ty = this.y + this.gameOver.sprite.height- this.tap[0].sprite.height;
                 sctx.drawImage(this.gameOver.sprite,this.x,this.y);
-                sctx.drawImage(this.tap[this.frame].sprite,this.tx,this.ty)
+                sctx.drawImage(this.tap[this.frame].sprite,this.tx,this.ty);
                 break;
         }
         this.drawScore();
@@ -390,7 +389,6 @@ scrn.addEventListener("click",()=>{
         this.frame += (frames % 10==0) ? 1 :0;
         this.frame = this.frame % this.tap.length;
     }
-
  };
 
  function setCounter() {
@@ -426,12 +424,12 @@ bird.animations[1].sprite.src="img/frank_wings_down.png";
 bird.animations[2].sprite.src="img/frank_wings_up.png";
 bird.animations[3].sprite.src="img/frank_wings_middle.png";
 bird.dead.sprite.src="img/frank_laugh.png";
-SFX.start.src = "sfx/start.wav"
-SFX.flap.src = "sfx/flap.wav"
-SFX.score1.src = "sfx/bloop.wav"
-SFX.score2.src = "sfx/bloop.wav"
-SFX.hit.src = "sfx/hit.wav"
-SFX.die.src = "sfx/die.wav"
+SFX.start.src = "sfx/start.wav";
+SFX.flap.src = "sfx/flap.wav";
+SFX.score1.src = "sfx/bloop.wav";
+SFX.score2.src = "sfx/bloop.wav";
+SFX.hit.src = "sfx/hit.wav";
+SFX.die.src = "sfx/die.wav";
 
 resizeCanvas(); 
 gameLoop();
@@ -454,7 +452,7 @@ function update() {
 
 function draw() {
     sctx.fillStyle = "#564d48"; //bg color
-    sctx.fillRect(0,0,scrn.width,scrn.height)
+    sctx.fillRect(0,0,scrn.width,scrn.height);
     bg.draw();
     pipe.draw();
 
