@@ -225,7 +225,7 @@ function resetGame() {
         switch (state.curr) {
             case state.getReady :
                 this.rotatation = 0;
-                this.y +=(frames%10==0) ? Math.sin(frames*RAD) : 0;
+                this.y += (frames%10==0) ? Math.sin(frames*RAD) : 0;
                 this.frame += (frames%10==0) ? 1 : 0;
                 break;
             case state.Play :
@@ -391,7 +391,7 @@ function resetGame() {
     }
  };
 
- function setCounter() {
+function setCounter() {
     counter ++;
     if (counter % 100 == 0) {
         dx += 0.1;
@@ -438,6 +438,7 @@ function gameLoop() {
     update();
     draw();
     frames++;
+    console.log(frames)
     requestAnimationFrame(gameLoop);
 }
 
